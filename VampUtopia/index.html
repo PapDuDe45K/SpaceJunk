@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VampUtopia | Space Junk</title>
+    <style>
+      :root {
+        --black: #0a0a0f;
+        --purple: #7f5af0;
+        --pink: #ff5470;
+        --white: #f4f4f4;
+        --faded: #c0c0c0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Orbitron", sans-serif;
+        background: var(--black);
+        color: var(--white);
+        overflow-x: hidden;
+      }
+
+      /* ===== 3D BACKGROUND ===== */
+      #three-container {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -2;
+      }
+
+      #three-container::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 50% 50%,
+            rgba(127, 90, 240, 0.15) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            circle at 20% 80%,
+            rgba(255, 84, 112, 0.1) 0%,
+            transparent 75%
+          ),
+          radial-gradient(
+            circle at 70% 20%,
+            rgba(255, 255, 255, 0.04) 0%,
+            transparent 80%
+          );
+        background-repeat: repeat;
+        animation: cosmicFade 10s infinite alternate;
+      }
+
+      @keyframes cosmicFade {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      /* ===== 3D PRODUCT VIEWER ===== */
+      #product-viewer {
+        width: 100%;
+        height: 500px;
+        position: relative;
+        background: rgba(22, 22, 29, 0.7);
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 2rem 0;
+        border: 1px solid var(--purple);
+      }
+
+      #product-viewer canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .viewer-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1rem;
+        z-index: 10;
+      }
+
+      .viewer-btn {
+        background: var(--purple);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: "Orbitron";
+        transition: all 0.3s;
+      }
+
+      .viewer-btn:hover {
+        background: var(--pink);
+      }
+
+      /* ===== NAVIGATION ===== */
+      nav {
+        position: fixed;
+        width: 100%;
+        padding: 20px 5%;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(10, 10, 18, 0.85);
+        backdrop-filter: blur(10px);
+      }
+
+      .logo {
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: var(--purple);
+        letter-spacing: 2px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--faded);
+        font-weight: 500;
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        background: var(--pink);
+        bottom: -4px;
+        left: 0;
+        transition: width 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* ===== SECTIONS ===== */
+      .section {
+        min-height: 100vh;
+        padding: 100px 10%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .hero {
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        color: var(--purple);
+        letter-spacing: 3px;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        color: var(--faded);
+        margin-top: 1rem;
+      }
+
+      .about {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .about h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--pink);
+      }
+
+      .about p {
+        line-height: 1.6;
+        font-size: 1.1rem;
+      }
+
+      .collection {
+        text-align: center;
+      }
+
+      .collection h2 {
+        font-size: 2.5rem;
+        color: var(--purple);
+        margin-bottom: 2rem;
+      }
+
+      .items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .item {
+        background: #16161d;
+        padding: 1rem;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+      }
+
+      .item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(127, 90, 240, 0.2);
+      }
+
+      .item img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+      }
+
+      .item h3 {
+        margin-bottom: 0.5rem;
+        color: var(--white);
+      }
+
+      .item p {
+        font-size: 0.9rem;
+        color: var(--faded);
+      }
+
+      .contact {
+        text-align: center;
+      }
+
+      .contact h2 {
+        font-size: 2.5rem;
+        color: var(--pink);
+        margin-bottom: 1rem;
+      }
+
+      form {
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      input,
+      textarea,
+      button {
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        background: #1f1f2e;
+        color: var(--white);
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      button {
+        background-color: var(--purple);
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background-color: var(--pink);
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: var(--faded);
+        font-size: 0.9rem;
+      }
+
+      /* ===== MOBILE STYLES ===== */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .nav-links {
+          position: fixed;
+          top: 80px;
+          right: -100%;
+          flex-direction: column;
+          background: rgba(10, 10, 18, 0.95);
+          width: 80%;
+          height: calc(100vh - 80px);
+          padding: 2rem;
+          transition: right 0.3s ease;
+        }
+
+        .nav-links.active {
+          right: 0;
+        }
+
+        #product-viewer {
+          height: 350px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="three-container"></div>
+
+    <nav>
+      <div class="logo">VampUtopia</div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">Brand</a></li>
+        <li><a href="#collection">Collection</a></li>
+        <li><a href="#contact">Connect</a></li>
+      </ul>
+      <button class="mobile-menu-btn" style="display: none">☰</button>
+    </nav>
+
+    <section id="home" class="section hero">
+      <h1>SPACE JUNK</h1>
+      <p class="tagline">Fashion for the Final Frontier</p>
+    </section>
+
+    <section id="about" class="section about">
+      <h2>The Brand</h2>
+      <p>
+        SPACE JUNK is more than clothing. It's a cry from the cosmos — a
+        wearable message about the digital and physical debris we leave behind.
+        Designed under VampUtopia, it's where fashion meets environmental
+        awareness. Each piece embodies cosmic chaos, futuristic survival, and
+        digital revolution.
+      </p>
+    </section>
+
+    <section id="collection" class="section collection">
+      <h2>Latest Drops</h2>
+
+      <!-- 3D Product Viewer -->
+      <div id="product-viewer">
+        <div class="viewer-loading">LOADING COSMIC GEAR...</div>
+      </div>
+      <div class="viewer-controls">
+        <button class="viewer-btn" id="rotate-btn">AUTO SPIN</button>
+        <button class="viewer-btn" id="reset-btn">RESET VIEW</button>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="items">
+        <div class="item" data-product="hoodie">
+          <img
+            src="https://via.placeholder.com/300x400/7f5af0/ffffff?text=Astro+Shell"
+            alt="Astro Shell Hoodie"
+          />
+          <h3>Astro Shell Hoodie</h3>
+          <p>Recycled fabric. Streetwear meets spacewear.</p>
+        </div>
+        <div class="item" data-product="tee">
+          <img
+            src="https://via.placeholder.com/300x400/ff5470/ffffff?text=Galaxy+Drip"
+            alt="Galaxy Drip Tee"
+          />
+          <h3>Galaxy Drip Tee</h3>
+          <p>100% organic cotton, printed with nebula-inspired inks.</p>
+        </div>
+        <div class="item" data-product="mask">
+          <img
+            src="https://via.placeholder.com/300x400/000000/ffffff?text=Void+Mask"
+            alt="Void Mask"
+          />
+          <h3>Void Mask</h3>
+          <p>Dark, protective, and made for the modern nomad.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact">
+      <h2>Connect</h2>
+      <form>
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea
+          placeholder="Drop a message or collab idea..."
+          required
+        ></textarea>
+        <button type="submit">Send Signal</button>
+      </form>
+    </section>
+
+    <footer>
+      &copy; 2025 VampUtopia | Fashion meets the Future | Built with love &
+      cosmic dust.
+    </footer>
+
+    <!-- Three.js and GLTF Loader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.min.js"></script>
+
+    <script>
+      // ===== MOBILE MENU =====
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const navLinks = document.querySelector(".nav-links");
+
+      function toggleMobileMenu() {
+        navLinks.classList.toggle("active");
+      }
+
+      // Show mobile menu button on small screens
+      function checkScreenSize() {
+        if (window.innerWidth <= 768) {
+          mobileMenuBtn.style.display = "block";
+          mobileMenuBtn.addEventListener("click", toggleMobileMenu);
+        } else {
+          mobileMenuBtn.style.display = "none";
+          navLinks.classList.remove("active");
+        }
+      }
+
+      window.addEventListener("resize", checkScreenSize);
+      checkScreenSize();
+
+      // Close menu when clicking a link
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 768) {
+            navLinks.classList.remove("active");
+          }
+        });
+      });
+
+      // ===== 3D PRODUCT VIEWER =====
+      let currentModel,
+        mixer,
+        clock = new THREE.Clock();
+      let autoRotate = true;
+      const viewer = document.getElementById("product-viewer");
+
+      // Scene setup
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0a0f);
+
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        viewer.clientWidth / viewer.clientHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(viewer.clientWidth, viewer.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      viewer.appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x7f5af0, 0.3);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(1, 1, 1);
+      scene.add(directionalLight);
+
+      const directionalLight2 = new THREE.DirectionalLight(0xff5470, 0.5);
+      directionalLight2.position.set(-1, -1, -1);
+      scene.add(directionalLight2);
+
+      // Load initial model
+      loadModel("hoodie");
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (mixer) mixer.update(clock.getDelta());
+        if (autoRotate && currentModel) currentModel.rotation.y += 0.005;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        camera.aspect = viewer.clientWidth / viewer.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(viewer.clientWidth, viewer.clientHeight);
+      });
+
+      // Model loading function
+      function loadModel(productType) {
+        // Remove previous model
+        if (currentModel) scene.remove(currentModel);
+
+        // Show loading state
+        const loadingElement =
+          viewer.querySelector(".viewer-loading") ||
+          document.createElement("div");
+        loadingElement.className = "viewer-loading";
+        loadingElement.textContent = "LOADING COSMIC GEAR...";
+        if (!viewer.querySelector(".viewer-loading")) {
+          viewer.appendChild(loadingElement);
+        }
+
+        // In a real implementation, you would load different GLB files based on productType
+        // For this demo, we'll create a simple placeholder geometry
+
+        // Create placeholder model based on product type
+        let geometry;
+        switch (productType) {
+          case "hoodie":
+            geometry = new THREE.BoxGeometry(2, 2.5, 0.5);
+            break;
+          case "tee":
+            geometry = new THREE.PlaneGeometry(2, 2.5);
+            break;
+          case "mask":
+            geometry = new THREE.SphereGeometry(1, 32, 32);
+            break;
+          default:
+            geometry = new THREE.BoxGeometry(1, 1, 1);
+        }
+
+        const material = new THREE.MeshStandardMaterial({
+          color: 0x7f5af0,
+          metalness: 0.7,
+          roughness: 0.3,
+        });
+
+        currentModel = new THREE.Mesh(geometry, material);
+        scene.add(currentModel);
+
+        // Hide loading element
+        loadingElement.style.display = "none";
+      }
+
+      // Product selection
+      document.querySelectorAll(".item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const product = item.getAttribute("data-product");
+          loadModel(product);
+        });
+      });
+
+      // Viewer controls
+      document.getElementById("rotate-btn").addEventListener("click", () => {
+        autoRotate = !autoRotate;
+        this.textContent = autoRotate ? "AUTO SPIN" : "PAUSE";
+      });
+
+      document.getElementById("reset-btn").addEventListener("click", () => {
+        if (currentModel) {
+          currentModel.rotation.set(0, 0, 0);
+        }
+      });
+
+      // Dragging interaction
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+
+      viewer.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      viewer.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+
+      viewer.addEventListener("mousemove", (e) => {
+        if (!isDragging || !currentModel) return;
+
+        const deltaMove = {
+          x: e.clientX - previousMousePosition.x,
+          y: e.clientY - previousMousePosition.y,
+        };
+
+        currentModel.rotation.y += deltaMove.x * 0.01;
+        currentModel.rotation.x += deltaMove.y * 0.01;
+
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      // Touch events for mobile
+      viewer.addEventListener("touchstart", (e) => {
+        isDragging = true;
+        previousMousePosition = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+        };
+        e.preventDefault();
+      });
+
+      viewer.addEventListener("touchend", () => {
+        isDragging = false;
+      });
+
+      viewer.addEventListener("touchmove", (e) => {
+        if (!isDragging || !currentModel) return;
+
+        const deltaMove = {
+          x: e.touches[0].clientX - previousMousePosition.x,
+          y: e.touches[0].clientY - previousMousePosition.y,
+        };
+
+        currentModel.rotation.y += deltaMove.x * 0.01;
+        currentModel.rotation.x += deltaMove.y * 0.01;
+
+        previousMousePosition = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+        };
+        e.preventDefault();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPACE JUNK | Digital Cosmos</title>
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --space-dark: #0a0a12;
+            --space-purple: #6c63ff;
+            --space-pink: #ff2d75;
+            --space-text: #e0e0ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            color: var(--space-text);
+            background: var(--space-dark);
+            overflow-x: hidden;
+        }
+
+        /* ===== 3D CONTAINER ===== */
+        #three-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        /* ===== PARTICLES CONTAINER ===== */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #0a0a12 0%, #000000 100%);
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 20px 5%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 18, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--space-purple);
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            color: var(--space-text);
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links li a span:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--space-purple);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links li a:hover span:after {
+            width: 100%;
+        }
+
+        /* ===== SECTIONS ===== */
+        .fullpage {
+            min-height: 100vh;
+            padding: 0 10%;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--space-purple);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        /* ===== GLITCH EFFECT ===== */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch:before, .glitch:after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch:before {
+            left: 2px;
+            text-shadow: -2px 0 var(--space-pink);
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(10% 0 90% 0); }
+            20% { clip-path: inset(80% 0 5% 0); }
+            100% { clip-path: inset(30% 0 60% 0); }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                flex-direction: column;
+                background: rgba(10, 10, 18, 0.9);
+                width: 100%;
+                text-align: center;
+                transition: 0.5s;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- === 3D Background Container === -->
+    <div id="three-container"></div>
+    
+    <!-- === Particles Container === -->
+    <div id="particles-js"></div>
+    
+    <!-- === Navigation === -->
+    <nav>
+        <div class="logo glitch" data-text="SPACE JUNK">SPACE JUNK</div>
+        <ul class="nav-links">
+            <li><a href="#home"><span>Home</span></a></li>
+            <li><a href="#about"><span>About</span></a></li>
+            <li><a href="#explore"><span>Explore</span></a></li>
+            <li><a href="#contact"><span>Contact</span></a></li>
+        </ul>
+    </nav>
+    
+    <!-- === Sections === -->
+    <section id="home" class="fullpage">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="ORBIT DECAY">ORBIT DECAY</h1>
+            <p class="subtitle">Lost in the digital cosmos</p>
+        </div>
+    </section>
+    
+    <section id="about" class="fullpage">
+        <div class="section-content">
+            <h2>ABOUT SPACE JUNK</h2>
+            <p>We track the debris of the internet's forgotten fragments.</p>
+        </div>
+    </section>
+    
+    <section id="explore" class="fullpage">
+        <div class="section-content">
+            <h2>EXPLORE THE DEBRIS</h2>
+        </div>
+    </section>
+    
+    <section id="contact" class="fullpage">
+        <div class="section-content">
+            <h2>TRANSMISSION</h2>
+            <form id="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Signal" required>
+                <textarea placeholder="Message" required></textarea>
+                <button type="submit">SEND</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // === Three.js Scene ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Three.js if available
+            if (typeof THREE !== 'undefined') {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.getElementById('three-container').appendChild(renderer.domElement);
+
+                // Create space debris
+                const geometry = new THREE.BufferGeometry();
+                const vertices = [];
+                for (let i = 0; i < 1000; i++) {
+                    vertices.push(
+                        Math.random() * 2000 - 1000,
+                        Math.random() * 2000 - 1000,
+                        Math.random() * 2000 - 1000
+                    );
+                }
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                const material = new THREE.PointsMaterial({ color: 0x6c63ff, size: 1.5 });
+                const debris = new THREE.Points(geometry, material);
+                scene.add(debris);
+
+                camera.position.z = 500;
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    debris.rotation.x += 0.001;
+                    debris.rotation.y += 0.002;
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            } else {
+                console.log("Three.js not loaded - using CSS fallback");
+                document.getElementById('three-container').innerHTML = `
+                    <style>
+                        #three-container::before {
+                            content: "";
+                            position: absolute;
+                            width: 300%;
+                            height: 300%;
+                            background: 
+                                radial-gradient(2px 2px at 20px 30px, white, rgba(0,0,0,0)),
+                                radial-gradient(2px 2px at 40px 70px, #6c63ff, rgba(0,0,0,0)),
+                                radial-gradient(2px 2px at 90px 40px, white, rgba(0,0,0,0));
+                            background-size: 100px 100px;
+                            animation: stars 100s linear infinite;
+                        }
+                        @keyframes stars {
+                            from { transform: translateY(0); }
+                            to { transform: translateY(-100px); }
+                        }
+                    </style>
+                `;
+            }
+
+            // === Particles.js Config ===
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 80, density: { enable: true, value_area: 800 } },
+                        color: { value: "#6c63ff" },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.5, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: { enable: true, distance: 150, color: "#6c63ff", opacity: 0.4, width: 1 },
+                        move: { enable: true, speed: 1, direction: "none", random: true }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: {
+                            onhover: { enable: true, mode: "repulse" },
+                            onclick: { enable: true, mode: "push" },
+                            resize: true
+                        }
+                    }
+                });
+            }
+
+            // === Smooth Scrolling ===
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // === Mobile Menu Toggle ===
+            const burger = document.querySelector('.burger');
+            const nav = document.querySelector('.nav-links');
+            if (burger && nav) {
+                burger.addEventListener('click', () => {
+                    nav.classList.toggle('active');
+                    burger.classList.toggle('toggle');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

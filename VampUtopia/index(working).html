@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VampUtopia | Space Junk</title>
+  <style>
+    :root {
+      --black: #0a0a0f;
+      --purple: #7f5af0;
+      --pink: #ff5470;
+      --white: #f4f4f4;
+      --faded: #c0c0c0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    #three-container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -2;
+    }
+
+    #three-container::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(127, 90, 240, 0.15) 0%, transparent 70%),
+                  radial-gradient(circle at 20% 80%, rgba(255, 84, 112, 0.1) 0%, transparent 75%),
+                  radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.04) 0%, transparent 80%);
+      background-repeat: repeat;
+      animation: cosmicFade 10s infinite alternate;
+    }
+
+    @keyframes cosmicFade {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    nav {
+      position: fixed;
+      width: 100%;
+      padding: 20px 5%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 18, 0.85);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: var(--purple);
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--faded);
+      font-weight: 500;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: var(--pink);
+      bottom: -4px;
+      left: 0;
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .section {
+      min-height: 100vh;
+      padding: 100px 10%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      color: var(--purple);
+      letter-spacing: 3px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      color: var(--faded);
+      margin-top: 1rem;
+    }
+
+    .about {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .about h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--pink);
+    }
+
+    .about p {
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+
+    .collection {
+      text-align: center;
+    }
+
+    .collection h2 {
+      font-size: 2.5rem;
+      color: var(--purple);
+      margin-bottom: 2rem;
+    }
+
+    .items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .item {
+      background: #16161d;
+      padding: 1rem;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .item:hover {
+      transform: translateY(-5px);
+    }
+
+    .item img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .item h3 {
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .item p {
+      font-size: 0.9rem;
+      color: var(--faded);
+    }
+
+    .contact {
+      text-align: center;
+    }
+
+    .contact h2 {
+      font-size: 2.5rem;
+      color: var(--pink);
+      margin-bottom: 1rem;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, textarea, button {
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      background: #1f1f2e;
+      color: var(--white);
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: var(--purple);
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--pink);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--faded);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="three-container"></div>
+
+  <nav>
+    <div class="logo">VampUtopia</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">Brand</a></li>
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#contact">Connect</a></li>
+    </ul>
+  </nav>
+
+  <section id="home" class="section hero">
+    <h1>SPACE JUNK</h1>
+    <p class="tagline">Fashion for the Final Frontier</p>
+  </section>
+
+  <section id="about" class="section about">
+    <h2>The Brand</h2>
+    <p>SPACE JUNK is more than clothing. It's a cry from the cosmos — a wearable message about the digital and physical debris we leave behind. Designed under VampUtopia, it’s where fashion meets environmental awareness. Each piece embodies cosmic chaos, futuristic survival, and digital revolution.</p>
+  </section>
+
+  <section id="collection" class="section collection">
+    <h2>Latest Drops</h2>
+    <div class="items">
+      <div class="item">
+        <img src="https://via.placeholder.com/300x400/7f5af0/ffffff?text=Astro+Shell" alt="Astro Shell Hoodie">
+        <h3>Astro Shell Hoodie</h3>
+        <p>Recycled fabric. Streetwear meets spacewear.</p>
+      </div>
+      <div class="item">
+        <img src="https://via.placeholder.com/300x400/ff5470/ffffff?text=Galaxy+Drip" alt="Galaxy Drip Tee">
+        <h3>Galaxy Drip Tee</h3>
+        <p>100% organic cotton, printed with nebula-inspired inks.</p>
+      </div>
+      <div class="item">
+        <img src="https://via.placeholder.com/300x400/000000/ffffff?text=Void+Mask" alt="Void Mask">
+        <h3>Void Mask</h3>
+        <p>Dark, protective, and made for the modern nomad.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section contact">
+    <h2>Connect</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Drop a message or collab idea..." required></textarea>
+      <button type="submit">Send Signal</button>
+    </form>
+  </section>
+
+  <footer>
+    &copy; 2025 VampUtopia | Fashion meets the Future | Built with love & cosmic dust.
+  </footer>
+</body>
+</html>
